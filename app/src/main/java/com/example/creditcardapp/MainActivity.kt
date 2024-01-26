@@ -41,6 +41,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     CreditCardAppTheme {
-        Greeting("Android")
+        CreditCardUI(
+            cardInfo = CardInfo(
+                "Damilola Adeniyi",
+                "0000 0000 0000 0000",
+                R.drawable.ic_launcher_background,
+                R.drawable.ic_launcher_foreground
+            )
+        )
     }
 }
