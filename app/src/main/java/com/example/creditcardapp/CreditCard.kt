@@ -23,30 +23,40 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CreditCardUI(cardInfo: CardInfo) {
     Card(
-        modifier = Modifier.height(200.dp),
+        modifier = Modifier
+            .height(200.dp),
         elevation = CardDefaults.elevatedCardElevation(10.dp),
         shape = RoundedCornerShape(8.dp)
-
     ) {
-        Image(
-            painter = painterResource(id = cardInfo.backgroundImage),
-            contentDescription = "Card Background",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
-        Box(modifier = Modifier.padding(16.dp)){
-
+        Box() {
             Image(
-                painter = painterResource(id = cardInfo.providerImage),
-                contentDescription = "Provider Image",
-                modifier = Modifier
-                    .width(86.dp)
-                    .align(Alignment.TopStart)
+                painter = painterResource(id = cardInfo.backgroundImage),
+                contentDescription = "Card Background",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
             )
-            Column(modifier = Modifier.align(Alignment.BottomStart)) {
-                Text(text = cardInfo.cardNumber, fontSize =  16.sp, letterSpacing = 1.2.sp)
+            Box(modifier = Modifier.padding(16.dp) .fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = cardInfo.providerImage),
+                    contentDescription = "Provider Image",
+                    modifier = Modifier
+                        .width(86.dp)
+                        .align(Alignment.TopStart)
 
-                Text(text = cardInfo.cardHolder, fontSize =  16.sp, letterSpacing = 1.2.sp)            }
+
+                )
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                ) {
+
+
+                    Text(text = cardInfo.cardNumber, fontSize = 16.sp, letterSpacing = 1.2.sp)
+                    Text(text = cardInfo.cardHolder, fontSize = 16.sp, letterSpacing = 1.2.sp)
+                }
+            }
+
         }
+
     }
 }
