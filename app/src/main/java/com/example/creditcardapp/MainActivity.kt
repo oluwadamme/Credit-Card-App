@@ -16,9 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.creditcardapp.ui.theme.CreditCardAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +42,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DisplayCards() {
+fun DisplayCards(navController: NavController) {
     val listOfCard = listOf(
         CardInfo(
             "Damilola Adeniyi",
@@ -72,8 +75,10 @@ fun DisplayCards() {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(listOfCard) {
-            CreditCardUI(cardInfo = it)
+        items(listOfCard) { it ->
+            CreditCardUI(
+                cardInfo = it,
+                onClick = { navController.navigate(Destinations.CardScreen.toString() + "/${it.cardHolder}/${it.cardNumber}/${it.backgroundImage}/${it.providerImage}") })
         }
     }
 }
@@ -84,19 +89,26 @@ fun DisplayNav() {
     val navController = rememberNavController()
 
     // Nav Host: responsible for hosting the content of the destination
-    NavHost(navController = navController, startDestination = "First Screen") {
+    NavHost(navController = navController, startDestination = Destinations.FirstScreen.toString()) {
         // Nav Graph Builder is used to add destination to the nav builder
-        composable("First Screen") {
-            DisplayCards()
+        composable(Destinations.FirstScreen.toString()) {
+            DisplayCards(navController)
         }
-        composable("Card Screen") {
+        composable(
+            Destinations.CardScreen.toString() + "/{cardName}/{cardNumber}/{bgImg}/{proImg}"
+        ) {
+            val cardName = it.arguments?.getString("cardName").toString()
+            val cardNumber = it.arguments?.getString("cardNumber").toString()
+            val bgImg = it.arguments?.getString("bgImg")?.toInt()!!
+            val proImg = it.arguments?.getString("proImg")?.toInt()!!
             CreditCardDetail(
                 cardInfo = CardInfo(
-                    "Damilola Adeniyi",
-                    "0000 0000 0000 0000",
-                    R.drawable.verve,
-                    R.drawable.img
-                )
+                    cardNumber,
+                    cardName,
+                    proImg,
+                    bgImg
+                ),
+                navController = navController,
             )
         }
     }
@@ -104,6 +116,13 @@ fun DisplayNav() {
 }
 
 @Composable
-fun CreditCardDetail(cardInfo: CardInfo) {
-    CreditCardUI(cardInfo)
+fun CreditCardDetail(cardInfo: CardInfo, navController: NavController) {
+    CreditCardUI(
+        cardInfo,
+        onClick = {
+            navController.popBackStack(
+                Destinations.FirstScreen.toString(),
+                inclusive = false
+            )
+        })
 }
