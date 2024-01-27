@@ -16,6 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.creditcardapp.ui.theme.CreditCardAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    DisplayCards()
+                    DisplayNav()
                 }
             }
         }
@@ -75,17 +78,32 @@ fun DisplayCards() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    CreditCardAppTheme {
-        CreditCardUI(
-            cardInfo = CardInfo(
-                "Damilola Adeniyi",
-                "0000 0000 0000 0000",
-                R.drawable.verve,
-                R.drawable.img
+fun DisplayNav() {
+    // Nav Controller: to keep track of the back stack of composable and the state of each one
+    val navController = rememberNavController()
+
+    // Nav Host: responsible for hosting the content of the destination
+    NavHost(navController = navController, startDestination = "First Screen") {
+        // Nav Graph Builder is used to add destination to the nav builder
+        composable("First Screen") {
+            DisplayCards()
+        }
+        composable("Card Screen") {
+            CreditCardDetail(
+                cardInfo = CardInfo(
+                    "Damilola Adeniyi",
+                    "0000 0000 0000 0000",
+                    R.drawable.verve,
+                    R.drawable.img
+                )
             )
-        )
+        }
     }
+
+}
+
+@Composable
+fun CreditCardDetail(cardInfo: CardInfo) {
+    CreditCardUI(cardInfo)
 }
